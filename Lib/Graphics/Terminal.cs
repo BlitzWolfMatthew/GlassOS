@@ -6,7 +6,7 @@ using Cosmos.System.Graphics;
 
 namespace GlassOS.Lib.Graphics
 {
-    public static class Terminal
+    public unsafe static class Terminal
     {
         // cursor
         public static int CursorX { get; private set; }
@@ -15,13 +15,28 @@ namespace GlassOS.Lib.Graphics
         // colors
         public static ConsoleColor BackgroundColor = ConsoleColor.Black;
         public static ConsoleColor ForegroundColor = ConsoleColor.White;
+        public static byte* BackBuffer;
+
+        public static void Update()
+        {
+            int l = 60 * 90 * 2 + 1;
+            for (int i = 0; i < l+1; i++)
+            {
+                VGADriverII.Buffer[i] = BackBuffer[i];
+            }            
+        }
 
         // clear the screen
-        public static void Clear()
+        public static void Clear(ConsoleColor bg)
         {
-            VGADriverII.Clear((byte)BackgroundColor);
+            for (int i = 0; i < (VGADriverII.Width * VGADriverII.Height) * 2; i += 2)
+            { 
+                BackBuffer[i] = 0x20;
+                BackBuffer[i + 1] = (byte)((byte) bg << 4);
+            }
             SetCursorPos(0, 0);
         }
+        public static void Clear() { Clear(ConsoleColor.Black); }
 
         public unsafe static void ClearAppBuffer(ConsoleColor bg)
         {
@@ -38,8 +53,8 @@ namespace GlassOS.Lib.Graphics
         public static unsafe void PutCharacter(int x, int y, char c, ConsoleColor fg, ConsoleColor bg)
         {
             uint index = (uint)(x + (y * VGADriverII.Width)) * 2;
-            VGADriverII.Buffer[index] = (byte)c;
-            VGADriverII.Buffer[index + 1] = ToAttribute((VGAColor)fg, (VGAColor)bg);
+            BackBuffer[index] = (byte)c;
+            BackBuffer[index + 1] = ToAttribute((VGAColor)fg, (VGAColor)bg);
         }
 
         // print character to next position
@@ -141,8 +156,9 @@ namespace GlassOS.Lib.Graphics
         {
             VGADriverII.SetCursorPos((ushort)x, (ushort)y);
             CursorX = x; CursorY = y;
-            VGADriverII.Buffer[((x + (y * VGADriverII.Width)) * 2) + 1] = ToAttribute((VGAColor)ForegroundColor, (VGAColor)BackgroundColor);
+            BackBuffer[((x + (y * VGADriverII.Width)) * 2) + 1] = ToAttribute((VGAColor)ForegroundColor, (VGAColor)BackgroundColor);
         }
+
         public static void SetCursorX(int x) { SetCursorPos(x, CursorY); }
         public static void SetCursorY(int y) { SetCursorPos(CursorX, y); }
         public static void UpdateCursor() { SetCursorPos(CursorX, CursorY); }

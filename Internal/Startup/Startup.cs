@@ -21,9 +21,11 @@ namespace GlassOS.Internal.Startup
 
             Terminal.ForegroundColor = ConsoleColor.White;
             Terminal.SetCursorPos(0, 10);
+            Terminal.Update();
 
             Terminal.ReadLine();
             Terminal.Clear();
+            Terminal.Update();
         }
     }
 }

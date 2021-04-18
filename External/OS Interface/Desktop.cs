@@ -10,6 +10,8 @@ namespace GlassOS.External.OS_Interface
     {
         public static void DrawDesktop()
         {
+            Terminal.Clear();
+            Terminal.Update();
             Terminal.SetCursorPos(0, 0);
             var fileEntryArr = GlassOS.Kernel.fs.GetDirectoryListing(@"0:\");
             Terminal.ForegroundColor = ConsoleColor.Yellow;

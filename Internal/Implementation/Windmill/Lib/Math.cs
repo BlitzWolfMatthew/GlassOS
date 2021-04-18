@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cosmos_1.Windmill.Lib
+namespace GlassOS.Internal.Implementation.Windmill.Lib
 {
     static class Math
     {

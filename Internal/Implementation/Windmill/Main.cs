@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cosmos_1.Windmill
+namespace GlassOS.Internal.Implementation.Windmill
 {
     class Windmill
     {
@@ -11,14 +11,21 @@ namespace Cosmos_1.Windmill
         public byte[] ram;
         public int index;
 
+        public GlassOS.Lib.App.AppTerminal terminal = new GlassOS.Lib.App.AppTerminal();
+
         public Windmill(uint mAlloc, byte[] program)
         {
             this.program = program;
             ram = new byte[mAlloc];
         }
 
-        public void RunNext()
+        //returns true if the program ended
+        public bool RunNext()
         {
+            if (program[index] == 0)
+                return true;
+            else
+                return false;
             FindCommand();
             index++;
         }

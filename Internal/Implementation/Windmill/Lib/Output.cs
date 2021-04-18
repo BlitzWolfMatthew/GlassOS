@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using GlassOS.Lib.Graphics;
+using GlassOS.Lib.App;
 
-namespace Cosmos_1.Windmill.Lib
+namespace GlassOS.Internal.Implementation.Windmill.Lib
 {
     static class Output
     {
@@ -31,19 +31,19 @@ namespace Cosmos_1.Windmill.Lib
         static void SetBackGroundColor(Windmill super)
         {
             byte type = super.program[super.index];
-            Terminal.BackgroundColor = (ConsoleColor)type;
+            super.terminal.BackgroundColor = (ConsoleColor)type;
         }
 
         static void SetForeGroundColor(Windmill super)
         {
             byte type = super.program[super.index];
-            Console.ForegroundColor = (ConsoleColor)type;
+            super.terminal.ForegroundColor = (ConsoleColor)type;
         }
 
         static void PrintChar(Windmill super)
         {
             int loc = Memory.GetRamLoc(super);
-            Console.Write((char) super.ram[loc]);
+            super.terminal.Write(((char) super.ram[loc]).ToString());
         }
 
         static void PrintString(Windmill super)
@@ -55,7 +55,7 @@ namespace Cosmos_1.Windmill.Lib
             {
                 capture += (char) super.ram[loc];
             }
-            Console.Write(capture);
+            super.terminal.Write(capture);
         }
     }
 }
