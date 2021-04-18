@@ -1,2 +1,2 @@
 # GlassOS
-Bootable operating system written in C# using COSMOSOS.
+Bootable operating system written in C# using CosmosOS.
